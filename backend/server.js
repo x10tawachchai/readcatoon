@@ -110,7 +110,7 @@ app.post('/api/manga/chapter', async (req, res) => {
 // Route to translate text
 app.post('/api/translate', async (req, res) => {
   try {
-    const { text, targetLanguage = 'th' } = req.body;
+    const { text, sourceLanguage = 'en', targetLanguage = 'th' } = req.body;
     
     if (!text) {
       return res.status(400).json({ error: 'Text is required' });
@@ -121,8 +121,9 @@ app.post('/api/translate', async (req, res) => {
       // Enhanced fallback translation using MyMemory API (free service)
       try {
         const encodedText = encodeURIComponent(text);
+        const langPair = `${sourceLanguage}|${targetLanguage}`;
         const translationResponse = await axios.get(
-          `https://api.mymemory.translated.net/get?q=${encodedText}&langpair=en|${targetLanguage}`
+          `https://api.mymemory.translated.net/get?q=${encodedText}&langpair=${langPair}`
         );
 
         if (translationResponse.data && translationResponse.data.responseData) {
@@ -152,7 +153,7 @@ app.post('/api/translate', async (req, res) => {
     }
 
     // Use Google Translate API
-    const [translation] = await translate.translate(text, targetLanguage);
+    const [translation] = await translate.translate(text, { from: sourceLanguage, to: targetLanguage });
     
     res.json({
       originalText: text,
