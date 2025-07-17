@@ -12,7 +12,8 @@ createApp({
       progress: 0,
       error: '',
       success: '',
-      processedPages: 0
+      processedPages: 0,
+      selectedLanguage: 'eng'
     }
   },
   methods: {
@@ -108,7 +109,7 @@ createApp({
             ctx.putImageData(imageData, 0, 0);
             
             // Perform OCR using Tesseract.js with optimized settings
-            const { data: { text, words } } = await Tesseract.recognize(canvas, 'eng', {
+            const { data: { text, words } } = await Tesseract.recognize(canvas, this.selectedLanguage, {
               logger: m => {
                 if (m.status === 'recognizing text') {
                   this.ocrProgress[pageIndex] = Math.round(m.progress * 100);
@@ -187,6 +188,7 @@ createApp({
           },
           body: JSON.stringify({ 
             text: text,
+            sourceLanguage: this.selectedLanguage,
             targetLanguage: 'th'
           })
         });

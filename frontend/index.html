@@ -243,6 +243,10 @@
                         placeholder="ป้อน MangaDx URL (เช่น https://mangadx.org/chapter/xxxxx)"
                         @keyup.enter="loadChapter"
                     >
+                    <select v-model="selectedLanguage" class="btn">
+                        <option value="eng">English</option>
+                        <option value="jpn">Japanese</option>
+                    </select>
                     <button 
                         class="btn" 
                         @click="loadChapter" 
